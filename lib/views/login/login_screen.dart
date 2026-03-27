@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     String username = _usernameController.text.trim();
-    
+
     if (username.toLowerCase() == 'henil') {
       _navigateToRole(UserRole.admin);
     } else if (username.toLowerCase() == 'shivam') {
@@ -47,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSize.wp * 6),
@@ -55,7 +56,14 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               SizedBox(height: AppSize.hp * 10),
               Center(
-                child: Icon(Icons.school_rounded, size: AppSize.wp * 25, color: AppColors.primary),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.school_rounded, size: AppSize.wp * 18, color: AppColors.primary),
+                ),
               ),
               SizedBox(height: AppSize.hp * 4),
               const Text(

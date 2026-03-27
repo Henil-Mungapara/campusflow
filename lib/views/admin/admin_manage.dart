@@ -14,44 +14,56 @@ class AdminManage extends StatelessWidget {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         centerTitle: true,
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           UIHelper.customTextField(controller: TextEditingController(), hintText: 'Search faculty or students...', icon: Icons.search),
-          const SizedBox(height: 16),
-          const Text('Faculty Directory', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          const SizedBox(height: 20),
+          _buildSectionHeader('Faculty Directory'),
           const SizedBox(height: 8),
-          _buildUserCard('Shivam', 'Senior Professor (CS)', Icons.person, AppColors.secondary),
-          _buildUserCard('Dr. Verma', 'HOD Mathematics', Icons.person, AppColors.secondary),
+          _buildUserCard('Shivam', 'Senior Professor (CS)', Icons.person),
+          _buildUserCard('Dr. Verma', 'HOD Mathematics', Icons.person),
           const SizedBox(height: 24),
-          const Text('Student Directory', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          _buildSectionHeader('Student Directory'),
           const SizedBox(height: 8),
-          _buildUserCard('Dhruvi', 'Semester 4', Icons.school, AppColors.primaryLight),
-          _buildUserCard('Rahul', 'Semester 6', Icons.school, AppColors.primaryLight),
+          _buildUserCard('Dhruvi', 'Semester 4', Icons.school),
+          _buildUserCard('Rahul', 'Semester 6', Icons.school),
           const SizedBox(height: 100),
         ],
       ),
     );
   }
 
-  Widget _buildUserCard(String name, String role, IconData icon, Color color) {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.05),
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+    );
+  }
+
+  Widget _buildUserCard(String name, String role, IconData icon) {
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: AppColors.defaultShadow,
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(icon, color: color)),
+        leading: CircleAvatar(
+          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+          child: Icon(icon, color: AppColors.primary),
+        ),
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
         subtitle: Text(role, style: const TextStyle(color: AppColors.textSecondary)),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(icon: const Icon(Icons.edit, color: Colors.blue), onPressed: () {}),
-            IconButton(icon: const Icon(Icons.delete, color: AppColors.priorityUrgent), onPressed: () {}),
+            IconButton(icon: const Icon(Icons.edit_outlined, color: AppColors.primary), onPressed: () {}),
+            IconButton(icon: const Icon(Icons.delete_outline, color: AppColors.priorityUrgent), onPressed: () {}),
           ],
         ),
       ),

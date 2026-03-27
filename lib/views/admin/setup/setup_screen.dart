@@ -13,7 +13,7 @@ class SetupScreen extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context); // Close dialog
+            Navigator.pop(context);
             _showAddDialog(context, title);
           },
           child: const Text('Add', style: TextStyle(color: AppColors.primary)),
@@ -21,7 +21,7 @@ class SetupScreen extends StatelessWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
           onPressed: () {
-            Navigator.pop(context); // Close dialog
+            Navigator.pop(context);
             _showViewScreen(context, title);
           },
           child: const Text('View', style: TextStyle(color: Colors.white)),
@@ -47,7 +47,6 @@ class SetupScreen extends StatelessWidget {
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
           onPressed: () {
-            // Mock save
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$title saved successfully!')));
           },
@@ -64,10 +63,13 @@ class SetupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Setup', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.surface,
-        scrolledUnderElevation: 0,
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
@@ -85,75 +87,118 @@ class SetupScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       color: AppColors.surface,
-      elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: AppColors.primary),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary)),
+        trailing: const Icon(Icons.chevron_right, color: AppColors.textLight),
         onTap: () => _onCardTap(context, title),
       ),
     );
   }
 }
 
-class SetupViewScreen extends StatelessWidget {
+class SetupViewScreen extends StatefulWidget {
   final String title;
   const SetupViewScreen({super.key, required this.title});
 
   @override
+  State<SetupViewScreen> createState() => _SetupViewScreenState();
+}
+
+class _SetupViewScreenState extends State<SetupViewScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  late List<Map<String, dynamic>> _allItems;
+  List<Map<String, dynamic>> _filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _allItems = List.generate(8, (index) => {
+      'id': '#100${index + 1}',
+      'name': 'Mock ${widget.title} ${index + 1}',
+      'index': index + 1,
+    });
+    _filteredItems = _allItems;
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredItems = _allItems.where((item) {
+        return item['name']!.toLowerCase().contains(query) ||
+               item['id']!.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('View $title', style: const TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.surface,
-        scrolledUnderElevation: 0,
+        title: Text('View ${widget.title}', style: const TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        elevation: 0,
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: UIHelper.customTextField(
-              controller: TextEditingController(),
-              hintText: 'Search $title...',
+              controller: _searchController,
+              hintText: 'Search ${widget.title}...',
               icon: Icons.search,
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 8,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
-                  color: AppColors.surface,
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  child: ListTile(
-                    title: Text('Mock $title ${index + 1}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                    subtitle: Text('ID: #100${index + 1}'),
-                    leading: CircleAvatar(
-                      backgroundColor: AppColors.primary.withOpacity(0.1),
-                      child: Text('${index + 1}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: AppColors.priorityUrgent),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Deleted mock $title ${index + 1}')));
-                      },
-                    ),
+            child: _filteredItems.isEmpty
+                ? const Center(child: Text('No items found.', style: TextStyle(color: AppColors.textSecondary)))
+                : ListView.builder(
+                    itemCount: _filteredItems.length,
+                    itemBuilder: (context, index) {
+                      final item = _filteredItems[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6.0),
+                        color: AppColors.surface,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: ListTile(
+                          title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                          subtitle: Text('ID: ${item['id']}', style: const TextStyle(color: AppColors.textSecondary)),
+                          leading: CircleAvatar(
+                            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                            child: Text('${item['index']}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline, color: AppColors.priorityUrgent),
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Deleted ${item['name']}')));
+                            },
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           )
         ],
       ),

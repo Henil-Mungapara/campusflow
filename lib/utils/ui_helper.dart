@@ -54,7 +54,7 @@ class UIHelper {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: gradient.colors.first.withOpacity(0.3),
+            color: gradient.colors.first.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           )
@@ -87,7 +87,7 @@ class UIHelper {
       decoration: BoxDecoration(
         color: AppColors.glassSurface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.5),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 1.5),
         boxShadow: AppColors.defaultShadow,
       ),
       child: ClipRRect(
@@ -122,7 +122,7 @@ class UIHelper {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(icon, color: color, size: 28),
@@ -178,7 +178,7 @@ class UIHelper {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: priorityColor.withOpacity(0.1),
+                    color: priorityColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.info_outline, color: priorityColor, size: 20),
@@ -259,7 +259,7 @@ class UIHelper {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -270,7 +270,7 @@ class UIHelper {
             const SizedBox(height: 8),
             Text(
               email,
-              style: GoogleFonts.inter(fontSize: 14, color: Colors.white.withOpacity(0.8)),
+              style: GoogleFonts.inter(fontSize: 14, color: Colors.white.withValues(alpha: 0.8)),
             ),
           ],
         ),

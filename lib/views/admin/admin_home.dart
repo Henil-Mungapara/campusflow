@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/ui_helper.dart';
 import '../../controllers/admin_controller.dart';
 import 'admin_dashboard.dart';
-import 'admin_manage.dart';
+import 'admin_manage_faculty.dart';
+import 'admin_manage_student.dart';
 import 'admin_profile.dart';
 import 'setup/setup_screen.dart';
 
@@ -14,7 +14,8 @@ class AdminHome extends StatelessWidget {
 
   final List<Widget> _pages = const [
     AdminDashboard(),
-    AdminManage(),
+    AdminManageFaculty(),
+    AdminManageStudent(),
     AdminProfile(),
   ];
 
@@ -25,12 +26,12 @@ class AdminHome extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildDialogOption(context, Icons.schedule, 'Schedule', Colors.blue, () {}),
-          _buildDialogOption(context, Icons.event, 'Event', AppColors.priorityMedium, () {}),
-          _buildDialogOption(context, Icons.campaign, 'Notice', AppColors.priorityUrgent, () {}),
-          _buildDialogOption(context, Icons.task, 'Task', AppColors.priorityLow, () {}),
-          const Divider(),
-          _buildDialogOption(context, Icons.settings, 'Setup', Colors.grey.shade700, () {
+          _buildDialogOption(context, Icons.schedule, 'Schedule', () {}),
+          _buildDialogOption(context, Icons.event, 'Event', () {}),
+          _buildDialogOption(context, Icons.campaign, 'Notice', () {}),
+          _buildDialogOption(context, Icons.task, 'Task', () {}),
+          const Divider(height: 1),
+          _buildDialogOption(context, Icons.settings, 'Setup', () {
             Navigator.pop(context);
             Navigator.push(context, MaterialPageRoute(builder: (_) => const SetupScreen()));
           }),
@@ -39,9 +40,9 @@ class AdminHome extends StatelessWidget {
     );
   }
 
-  Widget _buildDialogOption(BuildContext context, IconData icon, String title, Color color, VoidCallback onTap) {
+  Widget _buildDialogOption(BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: color),
+      leading: Icon(icon, color: AppColors.primary),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
       onTap: onTap,
     );
@@ -52,15 +53,16 @@ class AdminHome extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Exit App?', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: const Text('Are you sure you want to leave Campus Companion?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Exit App?', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+        content: const Text('Are you sure you want to leave Campus Companion?', style: TextStyle(color: AppColors.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Exit', style: TextStyle(color: Colors.white)),
           ),
@@ -73,9 +75,14 @@ class AdminHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<AdminController>(context);
-    
-    return WillPopScope(
-      onWillPop: () => _onWillPop(context),
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final shouldPop = await _onWillPop(context);
+        if (shouldPop && context.mounted) Navigator.of(context).pop();
+      },
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: _pages[controller.currentIndex],
@@ -84,7 +91,7 @@ class AdminHome extends StatelessWidget {
           shape: const CircleBorder(),
           backgroundColor: Colors.white,
           onPressed: () => _showAddDialog(context),
-          elevation: 2,
+          elevation: 4,
           child: const Icon(Icons.add, color: AppColors.primary, size: 28),
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -94,11 +101,14 @@ class AdminHome extends StatelessWidget {
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white54,
           type: BottomNavigationBarType.fixed,
-          elevation: 8,
+          elevation: 0,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+          unselectedLabelStyle: const TextStyle(fontSize: 11),
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-            BottomNavigationBarItem(icon: Icon(Icons.manage_accounts), label: 'Manage'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            BottomNavigationBarItem(icon: Icon(Icons.dashboard_rounded), label: 'Dashboard'),
+            BottomNavigationBarItem(icon: Icon(Icons.groups_rounded), label: 'Faculty'),
+            BottomNavigationBarItem(icon: Icon(Icons.school_rounded), label: 'Student'),
+            BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profile'),
           ],
         ),
       ),

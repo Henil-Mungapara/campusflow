@@ -9,31 +9,84 @@ class StudentProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Student Profile', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ),
       body: Column(
         children: [
-          UIHelper.profileHeader(name: 'Dhruvi', role: 'Student - Semester 4', email: 'dhruvi@campusflow.edu'),
-          const SizedBox(height: 24),
+          // 🔝 Custom Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(top: 60, bottom: 30),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.primary, Color(0xFF07294D)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              children: [
+                const CircleAvatar(
+                  radius: 45,
+                  backgroundImage: AssetImage('assets/avatar.png'), // add image
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Dhruvi',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Student - Semester 4',
+                  style: TextStyle(color: Colors.white70),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'dhruvi@campusflow.edu',
+                  style: TextStyle(color: Colors.white60, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // 🔽 Options
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
-                _buildProfileOption(Icons.person_pin, 'Personal Information'),
-                _buildProfileOption(Icons.library_books, 'Academic Records'),
+                _buildProfileOption(Icons.person, 'Personal Information'),
+                _buildProfileOption(Icons.menu_book, 'Academic Records'),
                 _buildProfileOption(Icons.account_balance_wallet, 'Fees & Payments'),
                 _buildProfileOption(Icons.settings, 'Settings'),
-                const SizedBox(height: 24),
-                UIHelper.customButton(
-                  text: 'Log Out',
+
+                const SizedBox(height: 30),
+
+                // 🚪 Logout Button
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 3,
+                  ),
                   onPressed: () {},
-                  gradient: const LinearGradient(colors: [AppColors.priorityUrgent, Colors.redAccent]),
+                  icon: const Icon(Icons.logout),
+                  label: const Text(
+                    "Log Out",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                const SizedBox(height: 100),
+
+                const SizedBox(height: 40),
               ],
             ),
           )
@@ -43,21 +96,38 @@ class StudentProfile extends StatelessWidget {
   }
 
   Widget _buildProfileOption(IconData icon, String title) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: AppColors.defaultShadow,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          )
+        ],
       ),
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: AppColors.primary.withOpacity(0.1), shape: BoxShape.circle),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
           child: Icon(icon, color: AppColors.primary),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textLight),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {},
       ),
     );

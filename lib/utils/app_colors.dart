@@ -39,12 +39,12 @@ class AppColors {
   // Default Shadow
   static List<BoxShadow> get defaultShadow => [
     BoxShadow(
-      color: const Color(0xFF07294D).withOpacity(0.06),
+      color: const Color(0xFF07294D).withValues(alpha: 0.06),
       blurRadius: 16,
       offset: const Offset(0, 4),
     ),
     BoxShadow(
-      color: const Color(0xFF07294D).withOpacity(0.04),
+      color: const Color(0xFF07294D).withValues(alpha: 0.04),
       blurRadius: 4,
       offset: const Offset(0, 2),
     ),
