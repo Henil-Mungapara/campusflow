@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       home: Builder(
         builder: (context) {
           AppSize.init(context);
-          return const AdminHome();
+          return const FacultyHome();
         },
       ),
     );

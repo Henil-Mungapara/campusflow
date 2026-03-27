@@ -13,12 +13,17 @@ class StudentDashboard extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UIHelper.pageHeader('Campus Companion', 'Hello, Student 👋'),
+      appBar: AppBar(
+        title: const Text('Student Dashboard', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
               
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -93,7 +98,7 @@ class StudentDashboard extends StatelessWidget {
             ],
           ),
         ),
-      ),
+
     );
   }
 }

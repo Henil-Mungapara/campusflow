@@ -9,6 +9,12 @@ class StudentProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Student Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+      ),
       body: Column(
         children: [
           UIHelper.profileHeader(name: 'Dhruvi', role: 'Student - Semester 4', email: 'dhruvi@campusflow.edu'),

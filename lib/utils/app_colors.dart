@@ -8,9 +8,9 @@ class AppColors {
   static const Color accent = Color(0xFFF43F5E); // Rose
 
   // Background and Surfaces
-  static const Color background = Colors.white; // Pure White Background
+  static const Color background = Color(0xFFF4F6F8); // Off-white Background
   static const Color surface = Colors.white; // White Surface
-  static const Color cardColor = Color(0xFFF8FAFC); // Very light gray for contrast against white BG
+  static const Color cardColor = Colors.white; 
   static const Color glassSurface = Color(0xCCFFFFFF); 
 
   // Text Colors
